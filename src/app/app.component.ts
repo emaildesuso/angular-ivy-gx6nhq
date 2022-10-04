@@ -12,6 +12,12 @@ export class AppComponent implements OnInit {
   constructor(private employeesService: EmployeesService) {}
 
   ngOnInit() {
+    console.log('init');
+    // cargamos los datos en el componente
     this.employees = this.employeesService.getAll();
   }
+
+  addEmployee() {}
+
+  removeEmployee(employee) {}
 }

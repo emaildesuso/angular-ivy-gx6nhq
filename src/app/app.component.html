@@ -1,14 +1,14 @@
-<div *ngIf="articulos!=null; else waiting4Data">
+<div *ngIf="employees != null; else waiting4Data">
   <table border="1">
-  <tr *ngFor="let employee of employees">
-    <td>{{employee.dni}}</td>
-    <td>{{employee.name}}</td>
-    <td>{{employee.surname}}</td>
-    <td>{{employee.email}}</td>
-    <td>{{employee.age}}</td>
-    <td>{{employee.department}}</td>
-    <td><button (click)="removeEmployee(employee);">Eliminar</button></td>
-  </tr>
-</table>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.dni }}</td>
+      <td>{{ employee.name }}</td>
+      <td>{{ employee.surname }}</td>
+      <td>{{ employee.email }}</td>
+      <td>{{ employee.age }}</td>
+      <td>{{ employee.department }}</td>
+      <td><button (click)="removeEmployee(employee)">Eliminar</button></td>
+    </tr>
+  </table>
 </div>
 <ng-template #waiting4Data>Esperando datos...</ng-template>
