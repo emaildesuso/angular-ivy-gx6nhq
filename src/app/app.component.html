@@ -1,14 +1,196 @@
-<div *ngIf="employees != null; else waiting4Data">
+<h3>Listado de empleados</h3>
+<div style="margin: 5px 10px;">
   <table border="1">
-    <tr *ngFor="let employee of employees">
-      <td>{{ employee.dni }}</td>
-      <td>{{ employee.name }}</td>
-      <td>{{ employee.surname }}</td>
-      <td>{{ employee.email }}</td>
-      <td>{{ employee.age }}</td>
-      <td>{{ employee.department }}</td>
-      <td><button (click)="removeEmployee(employee)">Eliminar</button></td>
-    </tr>
+    <thead>
+      <tr>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Email</th>
+        <th>Edad</th>
+        <th>Departamento</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees; let i = index">
+        <td>{{ employee.dni }}</td>
+        <td>{{ employee.name }}</td>
+        <td>
+          {{ employee.surnameA
+          }}<span *ngIf="employee.surnameA?.length">&nbsp;</span
+          >{{ employee.surnameB }}
+        </td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.age }}</td>
+        <td>{{ employee.department }}</td>
+        <td>
+          <button
+            (click)="removeEmployee(employee, i)"
+            [disabled]="employee.department === 'Administración'"
+          >
+            Eliminar
+          </button>
+        </td>
+        <td><button (click)="selectEmployee(employee, i)">Editar</button></td>
+      </tr>
+    </tbody>
   </table>
 </div>
-<ng-template #waiting4Data>Esperando datos...</ng-template>
+<div *ngIf="!editMode">
+  <h3>Agregue un nuevo empleado utilizando el siguiente formulario</h3>
+
+  <div style="margin: 5px 10px;">
+    <label>Numero de DNI</label><br />
+    <input
+      [(ngModel)]="dni"
+      type="text"
+      placeholder="p.e. 012345678X"
+      (blur)="checkDNI(dni)"
+      required
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Nombre</label><br />
+    <input
+      [(ngModel)]="name"
+      type="text"
+      placeholder="p.e. Juan Pedro"
+      required
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Primer apellidos</label><br />
+    <input
+      [(ngModel)]="surnameA"
+      type="text"
+      placeholder="p.e. López"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Segundo apellido</label><br />
+    <input
+      [(ngModel)]="surnameB"
+      type="text"
+      placeholder="p.e. Pérez"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Correo electrónico</label><br />
+    <input
+      [(ngModel)]="email"
+      type="email"
+      placeholder="p.e. juan.pedro.lopez.perez@nowhere.com"
+      pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+      required
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Fecha de nacimiento</label><br />
+    <input
+      [(ngModel)]="birthday"
+      type="date"
+      placeholder="p.e. 2000-01-01"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Departamento</label><br />
+    <select
+      [(ngModel)]="department"
+      placeholder="Departmento"
+      [ngModelOptions]="{ standalone: true }"
+    >
+      <option value="Administración">Administración</option>
+      <option value="Tienda">Tienda</option>
+      <option value="Contabilidad">Contabilidad</option>
+    </select>
+  </div>
+  <div style="margin: 5px 10px;">
+    <button type="submit" (click)="addEmployee()">Agregar empleado</button>
+  </div>
+</div>
+
+<div *ngIf="editMode">
+  <h3>
+    Modifique la información del empleado utilizando el siguiente formulario
+  </h3>
+
+  <div style="margin: 5px 10px;">
+    <label>Numero de DNI</label><br />
+    <input
+      [(ngModel)]="dniEdit"
+      type="text"
+      disabled
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Nombre</label><br />
+    <input
+      [(ngModel)]="nameEdit"
+      type="text"
+      placeholder="p.e. Juan Pedro"
+      required
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Primer apellido</label><br />
+    <input
+      [(ngModel)]="surnameAEdit"
+      type="text"
+      placeholder="p.e. López"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Segundo apellido</label><br />
+    <input
+      [(ngModel)]="surnameBEdit"
+      type="text"
+      placeholder="p.e. Pérez"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Correo electrónico</label><br />
+    <input
+      [(ngModel)]="emailEdit"
+      type="email"
+      placeholder="p.e. juan.pedro.lopez.perez@nowhere.com"
+      pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+      required
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Fecha de nacimiento</label><br />
+    <input
+      [(ngModel)]="birthdayEdit"
+      type="date"
+      placeholder="p.e. 2000-01-01"
+      [ngModelOptions]="{ standalone: true }"
+    />
+  </div>
+  <div style="margin: 5px 10px;">
+    <label>Departamento</label><br />
+    <select
+      [(ngModel)]="departmentEdit"
+      placeholder="Departmento"
+      [ngModelOptions]="{ standalone: true }"
+    >
+      <option value="Administración">Administración</option>
+      <option value="Tienda">Tienda</option>
+      <option value="Contabilidad">Contabilidad</option>
+    </select>
+  </div>
+  <div style="margin: 5px 10px;">
+    <button type="button" (click)="cancelEditMode()">Cancelar</button>
+    <button type="submit" (click)="updateEmployee()">Modificar empleado</button>
+  </div>
+</div>
